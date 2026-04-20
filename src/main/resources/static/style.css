@@ -1,0 +1,9 @@
+#erroMessage {
+	color: red;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}

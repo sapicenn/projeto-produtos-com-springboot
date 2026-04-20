@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.produtoapi.model.Produto;
 import com.produtoapi.service.ProdutoService;
 
+@CrossOrigin(origins = "*") //permite requisições de qualquer origem. Mas pode ser colocado um domínio específico de onde pode ser aceito requisições
 @RestController //define que é essa classe que responde as requisições HTTP
 @RequestMapping("/produtos") //significa uma rota http://localhost:8080/produtos
 public class ProdutoController {
