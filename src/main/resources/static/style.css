@@ -3,7 +3,130 @@
 }
 
 body {
+	background-image: linear-gradient(to top, rgb(131, 14, 185), rgb(219, 177, 238));
+
+	min-height: 100vh;
+
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	justify-content: center;
+
+	gap: 40px;
+
+	font-family: "Roboto", sans-serif;
+}
+
+.content {
+	max-width: 750px;
+	width: 100%;
+
+	background-color: white;
+
+	padding: 20px;
+	border-radius: 12px;
+}
+
+.cadastro {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+h1 {
+	font-weight:600;
+	color: rgb(131, 14, 185);
+}
+
+.form {
+	display: grid;
+	grid-template-columns: 100px 1fr;
+	gap: 25px 15px;
+	align-items: center;
+	max-width: 400px;
+}
+
+.cadastro input {
+	border-width: 0 0 2px 0;
+	border-color: rgb(131, 14, 185);
+	font-size: 17px;
+}
+
+.cadastro input:focus {
+	outline: none;
+}
+
+.cadastro label {
+	font-size: 17px;
+}
+
+.botoes {
+	margin: 20px;
+	display: flex;
+	gap: 10px;
+}
+
+.botoes button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	padding: 8px;
+	background-color: transparent;
+	color: rgb(131, 14, 185);
+	border: 1px solid rgb(131, 14, 185);
+	transition: background-color 0.3s ease;
+}
+
+.botao-salvar:hover {
+	background-color: rgb(211, 255, 211);
+	color: rgb(40, 233, 40);
+	border-color: rgb(40, 233, 40);
+	cursor: pointer;
+}
+
+.botao-deletar:hover {
+	background-color: rgb(255, 211, 211);
+	color: rgb(233, 40, 40);
+	border-color: rgb(233, 40, 40);
+	cursor: pointer;
+}
+
+.botao-atualizar:hover, .botao-consultar:hover, .botao-limpar:hover {
+	background-color: rgb(219, 177, 238);
+	cursor: pointer;
+}
+
+.lista {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.lista h1 {
+	margin-bottom: 25px;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+
+	margin: 0 20px;
+}
+
+thead th {
+  padding-bottom: 15px;
+  border-bottom: 2px solid transparent;
+}
+
+td {
+	padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: rgb(245, 228, 253);
+}
+
+th, td {
+  text-align: center;
 }

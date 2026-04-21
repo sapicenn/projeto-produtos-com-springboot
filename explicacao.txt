@@ -1,0 +1,12 @@
+O browser (HTML + JS) envia requisições HTTP para o Spring boot que pede os dados ao banco de dados.
+O banco de dados envia os dados para o Spring boot, que os transforma em JSON e envia para o browser novamente.
+
+O fetch é a forma moderna do JS de fazer requisições HTTP - ele é a ponte entre backend e frontend. O fetch é uma função para buscar dados 
+de um servidor. Por exemplo:
+const response = await fetch("http://localhost:8080/produtos");
+const dados = await response.json();
+isso significa:
+1. vai até essa url
+2. faz uma requisição HTTP (GET por padrão)
+3. salva o resultado dessa requisição em um objeto JS (response) (esse response não é json)
+4. converte o response para json e salva em 'dados'
