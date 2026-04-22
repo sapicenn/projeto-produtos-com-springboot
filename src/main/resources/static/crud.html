@@ -39,6 +39,8 @@
 					<button onclick="limparCampos()" class="botao-limpar">Limpar campos</button>
 				</div>
 
+				<small id="erro-nome" class="erro"></small>
+
 			</div>
 			
 			<div class="lista">
@@ -104,11 +106,33 @@
 				
 				async function salvar() {
 					const produto = getProdutoFromForm();
-					await fetch(BASE_URL, {
+
+					const nomeInput = document.getElementById("nome");
+					const erroNome = document.getElementById("erro-nome");
+
+					erroNome.textContent = "";
+					nomeInput.classList.remove("erro-input");
+
+					const response = await fetch(BASE_URL, {
 						method: 'POST',
 						headers: {'Content-Type': 'application/json'}, 
 						body: JSON.stringify(produto)
 					});
+
+					if(!response.ok) {
+						const erro = await response.json();
+						const mensagem = erro.errors?.[0]?.defaultMessage;
+
+						if(mensagem) {
+							erroNome.textContent = mensagem;
+							nomeInput.classList.add("erro-input");
+							nomeInput.focus();
+						}
+
+						return;
+						
+					}
+
 					listarTodos();
 					limparCampos();
 				}

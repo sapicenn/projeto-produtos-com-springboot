@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import com.produtoapi.model.Produto;
 import com.produtoapi.service.ProdutoService;
 
+import jakarta.validation.Valid;
+
 @CrossOrigin(origins = "*") //permite requisições de qualquer origem. Mas pode ser colocado um domínio específico de onde pode ser aceito requisições
 @RestController //define que é essa classe que responde as requisições HTTP
 @RequestMapping("/produtos") //significa uma rota http://localhost:8080/produtos
@@ -28,7 +30,7 @@ public class ProdutoController {
 	}
 	
 	@PostMapping //significa que a rota é de salvar algo
-	public Produto salvar(@RequestBody Produto produto) { //@RequestBody quer dizer que deve vir informações de produto no corpo da solicitação
+	public Produto salvar(@RequestBody @Valid Produto produto) { //@RequestBody quer dizer que deve vir informações de produto no corpo da solicitação
 		return produtoService.salvar(produto);
 	}
 	

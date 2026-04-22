@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Produto {
@@ -13,9 +13,8 @@ public class Produto {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	@NotEmpty(message = "Informe um nome.")
+	@NotBlank(message = "Informe um nome.")
 	private String nome;
-	
 	private int quantidade;
 	private double preco;
 	private String status;
