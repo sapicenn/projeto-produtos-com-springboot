@@ -13,7 +13,7 @@ O sistema de cadstro de produtos é uma aplicação web completa voltada para o 
 ## Tecnologias utilizadas
 1. Java
 2. Spring Boot
-3. MySQL
+3. PostgreSQL
 4. Spring Data JPA + Hibernate
 5. JavaScript
 6. HTML 
