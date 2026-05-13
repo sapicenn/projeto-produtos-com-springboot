@@ -35,7 +35,7 @@ O sistema de cadstro de produtos é uma aplicação web completa voltada para o 
 1. Clone o repositório: `git clone https://github.com/sapicenn/projeto-produtos-com-springboot`
 2. Execute o programa
 ### Frontend:
-3. Abra o arquivo HTML no seu navegador ou rode com uma extensão como extensão Live Server
+3. Abra o arquivo HTML no seu navegador ou rode com uma extensão como Live Server
 
 ## Autor
 Desenvolvido por Sarah Picenni de Oliveira
