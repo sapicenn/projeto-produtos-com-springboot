@@ -49,6 +49,11 @@ public class ProdutoController {
 		produtoService.deletar(id);
 	}
 	
+	@GetMapping("/buscarTotalProdutos")
+	public Integer buscarTotalProdutos() {
+		return produtoService.findTotalProdutos();
+	}
+	
 	//perceba que 3 rotas recebem o mesmo argumento (id), o que muda é o tipo de HTTP que será solicitado
 	
 	//============= BUSCAS DETALHADAS POR NOME DE PRODUTO =============
@@ -79,4 +84,33 @@ public class ProdutoController {
 		return produtoService.findByNomeEndingWith(suffix);
 	}
 	//http://localhost:8080/produtos/buscarPorNomeTerminandoCom?suffix=Gamer
+	
+	//============= BUSCAS DETALHADAS POR PREÇO DE PRODUTO =============
+	@GetMapping("/buscarPorPreco")
+	public List<Produto> buscarPorPreco(@RequestParam Double valor) {
+		return produtoService.findByPreco(valor);
+	}
+	//http://localhost:8080/produtos/buscarPorPreco?valor=40
+	
+	@GetMapping("/buscarPorPrecoMaiorQue")
+	public List<Produto> buscarPorPrecoMaiorQue(@RequestParam Double valor) {
+		return produtoService.findByPrecoGreaterThan(valor);
+	}
+	//http://localhost:8080/produtos/buscarPorPrecoMaiorQue?valor=40
+	
+	@GetMapping("/buscarPorPrecoMenorQue")
+	public List<Produto> buscarPorPrecoMenorQue(@RequestParam Double valor) {
+		return produtoService.findByPrecoLessThan(valor);
+	}
+	//http://localhost:8080/produtos/buscarPorPrecoMenorQue?valor=1000
+	
+	@GetMapping("/buscarTotalPreco")
+	public Double buscarTotalPreco() {
+		return produtoService.findTotalPreco();
+	}
+	
+	@GetMapping("/buscarValorTotalDeEstoque")
+	public Double buscarValorTotalDeEstoque() {
+		return produtoService.findValorTotalDeEstoque();
+	}
 }
