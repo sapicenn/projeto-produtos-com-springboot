@@ -60,7 +60,7 @@ public class CRUDJavaClient {
 	} 
 	
 	public static void main(String[] args) {
-		CRUDJavaClient client = new CRUDJavaClient();
+		//CRUDJavaClient client = new CRUDJavaClient();
 		
 		//criar um novo produto
 //		Produto novoProduto = new Produto("Garrafa Térmica", 15, 40.50, "Disponível");
