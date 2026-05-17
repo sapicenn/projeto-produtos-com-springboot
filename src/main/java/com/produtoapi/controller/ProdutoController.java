@@ -50,4 +50,33 @@ public class ProdutoController {
 	}
 	
 	//perceba que 3 rotas recebem o mesmo argumento (id), o que muda é o tipo de HTTP que será solicitado
+	
+	//============= BUSCAS DETALHADAS POR NOME DE PRODUTO =============
+	@GetMapping("/buscarPorNome")
+	public List<Produto> buscarPorNome(@RequestParam String valor) {
+		return produtoService.findByNome(valor);
+	}
+	
+	@GetMapping("/buscarPorNomeContendo")
+	public List<Produto> buscarPorNomeContendo(@RequestParam String valor) {
+		return produtoService.findByNomeContaining(valor);
+	}
+	
+	@GetMapping("/buscarPorNomeEStatus")
+	public List<Produto> buscarPorNomeEStatus(@RequestParam String nome, @RequestParam String status) {
+		return produtoService.findByNomeAndStatus(nome, status);
+	}
+	//http://localhost:8080/produtos/buscarPorNomeEStatus?nome=Televisão&status=disponível
+	
+	@GetMapping("/buscarPorNomeComecandoCom")
+	public List<Produto> buscarPorNomeComecandoCom(@RequestParam String prefix) {
+		return produtoService.findByNomeStartingWith(prefix);
+	}
+	//http://localhost:8080/produtos/buscarPorNomeComecandoCom?prefix=C
+	
+	@GetMapping("/buscarPorNomeTerminandoCom")
+	public List<Produto> buscarPorNomeTerminandoCom(@RequestParam String suffix) {
+		return produtoService.findByNomeEndingWith(suffix);
+	}
+	//http://localhost:8080/produtos/buscarPorNomeTerminandoCom?suffix=Gamer
 }

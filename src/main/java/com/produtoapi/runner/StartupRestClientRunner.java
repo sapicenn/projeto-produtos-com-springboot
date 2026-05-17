@@ -24,5 +24,4 @@ public class StartupRestClientRunner implements CommandLineRunner { //executa um
 		
 		produtos.forEach(produto -> System.out.println("ID: "+produto.getId()+". "+produto.getNome()+": "+produto.getPreco()));
 	} 
-	
 }

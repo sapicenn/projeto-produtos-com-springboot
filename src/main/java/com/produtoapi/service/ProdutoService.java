@@ -43,4 +43,26 @@ public class ProdutoService {
 	public Optional<Produto> findById(Long id) {
 		return produtoRepository.findById(id);
 	}
+	
+	//============= BUSCAS DETALHADAS POR NOME DE PRODUTO =============
+	
+	public List<Produto> findByNome(String nome) {
+		return produtoRepository.findByNome(nome);
+	}
+	
+	public List<Produto> findByNomeContaining(String nome) {
+		return produtoRepository.findByNomeContaining(nome);
+	}
+	
+	public List<Produto> findByNomeAndStatus(String nome, String status) {
+		return produtoRepository.findByNomeAndStatus(nome, status);
+	}
+	
+	public List<Produto> findByNomeStartingWith(String prefix) {
+		return produtoRepository.findByNomeStartingWith(prefix);
+	}
+	
+	public List<Produto> findByNomeEndingWith(String suffix) {
+		return produtoRepository.findByNomeEndingWith(suffix);
+	}
 }
