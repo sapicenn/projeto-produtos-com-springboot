@@ -38,7 +38,7 @@ O sistema de cadstro de produtos é uma aplicação web completa voltada para o 
 |PUT | `/produtos/{id}` | altera informações de um produto
 | DELETE | `/produtos/{id}` | remove um produto
 
-### Endpoints para buscas detalhada
+### Endpoints para buscas detalhadas
 | Método | Endpoint | Descrição 
 |--------|----------|-----------
 |GET | `/buscarPorNome` | busca um produto pelo seu nome exato
