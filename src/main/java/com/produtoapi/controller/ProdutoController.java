@@ -49,9 +49,9 @@ public class ProdutoController {
 		produtoService.deletar(id);
 	}
 	
-	@GetMapping("/buscarTotalProdutos")
-	public Integer buscarTotalProdutos() {
-		return produtoService.findTotalProdutos();
+	@GetMapping("/totalProdutos")
+	public Long totalDeProdutos() {
+		return produtoService.count();
 	}
 	
 	//perceba que 3 rotas recebem o mesmo argumento (id), o que muda é o tipo de HTTP que será solicitado
@@ -112,5 +112,17 @@ public class ProdutoController {
 	@GetMapping("/buscarValorTotalDeEstoque")
 	public Double buscarValorTotalDeEstoque() {
 		return produtoService.findValorTotalDeEstoque();
+	}
+	
+	//============= BUSCAS DETALHADAS POR STATUS DE PRODUTO =============
+	
+	@GetMapping("/buscarPorStatus")
+	public List<Produto> buscarPorStatus(@RequestParam(required = false) String status) { //required é, por padrão, true. Se você deixa falso quer dizer que é opcional passar o parâmetro
+		return produtoService.findByStatus(status);										  //também poderia ser (defaultValue = "Disponível")
+	}
+	
+	@GetMapping("/buscarPorStatusNulo")
+	public List<Produto> buscarPorStatusNulo() {
+		return produtoService.findByStatusIsNull();
 	}
 }

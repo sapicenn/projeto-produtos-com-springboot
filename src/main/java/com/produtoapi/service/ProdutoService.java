@@ -44,8 +44,8 @@ public class ProdutoService {
 		return produtoRepository.findById(id);
 	}
 	
-	public Integer findTotalProdutos() {
-		return produtoRepository.findTotalProdutos();
+	public Long count() {
+		return produtoRepository.count();
 	}
 	
 	//============= BUSCAS DETALHADAS POR NOME DE PRODUTO =============
@@ -90,5 +90,14 @@ public class ProdutoService {
 	
 	public Double findValorTotalDeEstoque() {
 		return produtoRepository.findValorTotalDeEstoque();
+	}
+	
+	//============= BUSCAS DETALHADAS POR STATUS DE PRODUTO =============
+	public List<Produto> findByStatus(String status) {
+		return produtoRepository.findByStatus(status);
+	}
+	
+	public List<Produto> findByStatusIsNull() {
+		return produtoRepository.findByStatusIsNull();
 	}
 }

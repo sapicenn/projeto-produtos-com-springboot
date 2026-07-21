@@ -28,6 +28,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 	@Query("SELECT SUM(p.preco * p.quantidade) FROM Produto p")
 	Double findValorTotalDeEstoque();
 	
-	@Query("SELECT COUNT(p) FROM Produto p")
-	Integer findTotalProdutos();
+	List<Produto> findByStatus(String status);
+	List<Produto> findByStatusIsNull();
 }
