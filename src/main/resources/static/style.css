@@ -189,6 +189,12 @@ button {
     font-weight: bold;
 }
 
+.table {
+    flex: 1;
+    overflow-y: auto;
+    margin: 20px;
+}
+
 table {
     width: calc(100% - 40px);
     border-collapse: collapse;
@@ -200,6 +206,8 @@ thead th {
     background-color:#047db128;
     padding: 13px;
     font-size: 15px;
+    position: sticky;
+    top: 0;
 }
 
 tr {

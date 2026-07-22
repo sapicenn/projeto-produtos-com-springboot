@@ -115,6 +115,17 @@
                 return {nome, preco: parseFloat(preco), quantidade: parseInt(quantidade), status}
             }
 
+            function limparCampos() {
+                document.getElementById('id').value = '';
+                document.getElementById('nome').value = '';
+                document.getElementById('preco').value = '';
+                document.getElementById('quantidade').value = '';
+
+                document.querySelectorAll('input[name="status"]').forEach(radio => {
+                    radio.checked = false;
+                });
+            }
+
             async function listarTodos() { //async permite usar await dentro da função
                 const response = await fetch(BASE_URL); //o fetch vai na base de dados buscar eles e vai guardar no response
                 const produtos = await response.json(); //o await espera todos os dados virem para o programa continuar. Aqui ele transforma a resposta em json
@@ -190,6 +201,7 @@
                 }
 
                 listarTodos();
+                limparCampos();
             }
 
             async function atualizar() {
@@ -201,12 +213,15 @@
                     body: JSON.stringify(produto)
                 });
                 listarTodos();
+                limparCampos();
             }
             
             async function deletar() {
                 const id = document.getElementById('id').value;
                 await fetch(`${BASE_URL}/${id}`, {method: 'DELETE'});
+                
                 listarTodos();
+                limparCampos();
             }
             
             function carregarCampos() {
