@@ -3,7 +3,6 @@ package com.produtoapi.controller;
 import java.util.List;
 import java.util.Optional; //pode retornar null, assim evita nullPointerException
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.produtoapi.model.Produto;
@@ -16,8 +15,11 @@ import jakarta.validation.Valid;
 @RequestMapping("/produtos") //significa uma rota http://localhost:8080/produtos
 public class ProdutoController {
 	
-	@Autowired
-	private ProdutoService produtoService;
+	private final ProdutoService produtoService;
+
+	ProdutoController(ProdutoService produtoService) {
+		this.produtoService = produtoService;
+	}
 	
 	@GetMapping //significa que a rota é de buscar algo
 	public List<Produto> listarTodos() {

@@ -49,12 +49,13 @@ O sistema de cadstro de produtos é uma aplicação web completa voltada para o 
 |GET | `/buscarPorPreco` | busca um produto de preço extato
 |GET | `/buscarPorPrecoMenorQue` | busca produtos com preço menor que o informado
 |GET | `/buscarPorPrecoMaiorQue` | busca produtos com preço maior que o informado
+* Ainda não foram implementadas no Front-end
 
 ## Como executar o projeto
 ### Backend:
 1. Clone o repositório: `git clone https://github.com/sapicenn/projeto-produtos-com-springboot`
 2. Abra na sua IDE preferida
-3. Execute o programa
+3. Execute a classe `MeuProjetoSpringBootApplication.java`
 ### Frontend:
 4. Abra o arquivo HTML no seu navegador ou rode com uma extensão como Live Server
 

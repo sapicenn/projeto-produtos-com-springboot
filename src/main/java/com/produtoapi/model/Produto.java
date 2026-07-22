@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 public class Produto {
@@ -13,13 +15,16 @@ public class Produto {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	@NotBlank(message = "Informe um nome.")
+	@NotBlank(message = "Informe um nome")
 	private String nome;
-	private int quantidade;
-	private double preco;
+	@NotNull(message = "Informe uma quantidade")
+	private Integer quantidade;
+	@NotNull(message = "Informe um preço")
+	@Positive(message = "O valor deve ser maior que zero")
+	private Double preco;
 	private String status;
 	
-	public Produto(String nome, int quantidade, double preco, String status) {
+	public Produto(String nome, Integer quantidade, Double preco, String status) {
 		this.nome = nome;
 		this.quantidade = quantidade;
 		this.preco = preco;
@@ -44,19 +49,19 @@ public class Produto {
 		this.nome = nome;
 	}
 	
-	public int getQuantidade() {
+	public Integer getQuantidade() {
 		return this.quantidade;
 	}
 	
-	public void setQuantidade(int qtde) {
+	public void setQuantidade(Integer qtde) {
 		this.quantidade = qtde;
 	}
 	
-	public double getPreco() {
+	public Double getPreco() {
 		return this.preco;
 	}
 	
-	public void setPreco(double preco) {
+	public void setPreco(Double preco) {
 		this.preco = preco;
 	}
 	

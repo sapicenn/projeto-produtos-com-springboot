@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Inventário de produtos</title>
+</head>
+<body>
+    <div class="content">
+        <div class="formulario">
+            <div class="form-title">
+                <p>Cadastre um novo produto</p>
+            </div>
+
+            <div class="form">
+                <div class="linha">
+                    <label for="id">ID</label>
+                    <input type="text" id="id" placeholder="Identificador do produto" class="input-line">
+                </div>
+                
+                <div class="linha">
+                    <label for="nome">Nome</label>
+                    <input type="text" id="nome" placeholder="Nome do produto" class="input-line">
+                    <small id="erro-nome" class="erro"></small>
+                </div>
+
+                <div class="linha">
+                    <label for="preco">Preço</label>
+                    <input type="text" id="preco" placeholder="Preço do produto" class="input-line">		
+                    <small id="erro-preco" class="erro"></small>
+                </div>
+                
+                <div class="linha">
+                    <label for="quantidade">Quantidade</label>
+                    <input type="text" id="quantidade" placeholder="Quantidade em estoque" class="input-line">
+                    <small id="erro-quantidade" class="erro"></small>
+                </div>
+                
+                <div class="linha input-radio">
+                    <label>Status</label>
+
+                    <div class="radios">
+                        <div class="radio">
+                            <input type="radio" id="disponivel" name="status" value="disponivel">
+                            <label for="disponivel">Disponível</label>
+                        </div>
+
+                        <div class="radio">
+                            <input type="radio" id="indisponivel" name="status" value="indisponivel" checked>
+                            <label for="indisponivel">Indisponível</label>                        
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="botoes">
+                <button onclick="salvar()" class="botao-salvar">Salvar</button>
+                <button onclick="atualizar()" class="botao-atualizar">Atualizar</button>
+                <button onclick="deletar()" class="botao-deletar">Deletar</button>
+                <button onclick="carregarCampos()" class="botao-consultar">Consultar</button>
+            </div>
+
+            </div>
+
+        <div class="inventario">
+            <div class="infos-invent">
+                <div class="title-invent">
+                    <p>Inventário de produtos</p>
+                </div>
+
+                <div class="dados">
+                    <div class="total-produtos">
+                        <p class="dados-title">Total de produtos</p>
+                        <p class="dados-num" id="total-produtos"></p>
+                    </div>
+                    <div class="fora-estoque">
+                        <p class="dados-title">Fora de estoque</p>
+                        <p class="dados-num" id="fora-estoque"></p>
+                    </div>
+                    <div class="total-itens">
+                        <p class="dados-title">Total de itens</p>
+                        <p class="dados-num" id="total-itens"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>PRODUTO</th>
+                            <th>PREÇO</th>
+                            <th>QUANTIDADE</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-produtos"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <script>
+
+            const BASE_URL = 'http://localhost:8080/produtos';
+
+            //função que coleta dados do formulário
+            function getProdutoFromForm() {
+                const nome = document.getElementById('nome').value;
+                const preco = document.getElementById('preco').value;
+                const quantidade = document.getElementById('quantidade').value;
+                const status = document.querySelector('input[name="status"]:checked')?.value || "indisponivel";
+                return {nome, preco: parseFloat(preco), quantidade: parseInt(quantidade), status}
+            }
+
+            async function listarTodos() { //async permite usar await dentro da função
+                const response = await fetch(BASE_URL); //o fetch vai na base de dados buscar eles e vai guardar no response
+                const produtos = await response.json(); //o await espera todos os dados virem para o programa continuar. Aqui ele transforma a resposta em json
+                const lista = document.getElementById('lista-produtos'); //tudo o que eu mexer na lista vai aparecer la na ul
+                const total = document.getElementById('total-produtos'); //mesma coisa aqui, isso se chama passagem por referência
+                const total_itens = document.getElementById('total-itens');
+                let quantidade_itens = 0;
+                const fora_estoque = document.getElementById('fora-estoque');
+                let quantidade_fora_estoque = 0;
+                lista.innerHTML = ''; //limpa a lista, porque se chamar de novo ele adiciona o conteúdo novamente
+                produtos.forEach(produto => {
+                    const linha = document.createElement('tr');
+                    linha.innerHTML = `
+                        <td>${produto.id}</td>
+                        <td>${produto.nome}</td>
+                        <td>R$${produto.preco.toFixed(2)}</td>
+                        <td>${produto.quantidade}</td>
+                        <td>${produto.status}</td>
+                    `;
+                    
+                        lista.appendChild(linha);
+                        quantidade_itens += produto.quantidade;
+
+                        if (produto.quantidade === 0) {
+                            quantidade_fora_estoque += 1;
+                        }
+                });
+
+                total.textContent = `${produtos.length}`;	
+                total_itens.textContent = quantidade_itens;
+                fora_estoque.textContent = quantidade_fora_estoque;
+            } 
+
+            async function salvar() {
+                const produto = getProdutoFromForm();
+
+                //limpa mensagens e estilos de erro anteriores
+                document.querySelectorAll(".erro").forEach(e => e.textContent = "");
+                document.querySelectorAll(".erro-input").forEach(i => i.classList.remove("erro-input"));
+
+                const response = await fetch(BASE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(produto)
+                });
+
+                if (!response.ok) {
+                    const erro = await response.json();
+
+                    const campo = erro.errors?.[0]?.field;
+                    const mensagem = erro.errors?.[0]?.defaultMessage;
+
+                    console.log(campo);
+                    console.log(mensagem);
+
+                    if (campo && mensagem) {
+                        const input = document.getElementById(campo);
+                        const erroCampo = document.getElementById(`erro-${campo}`);
+
+                        if (erroCampo) {
+                            erroCampo.textContent = mensagem;
+                        }
+
+                        if (input) {
+                            input.classList.add("erro-input");
+                            input.focus();
+                        }
+                    }
+
+                    return;
+                }
+
+                listarTodos();
+            }
+
+            async function atualizar() {
+                const produto = getProdutoFromForm();
+                const id = document.getElementById('id').value;
+                await fetch(`${BASE_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(produto)
+                });
+                listarTodos();
+            }
+            
+            async function deletar() {
+                const id = document.getElementById('id').value;
+                await fetch(`${BASE_URL}/${id}`, {method: 'DELETE'});
+                listarTodos();
+            }
+            
+            function carregarCampos() {
+                const id = document.getElementById('id').value;
+                fetch(`${BASE_URL}/${id}`).then(response => response.json()).then(produto => {
+                    document.getElementById('nome').value = produto.nome;
+                    document.getElementById('preco').value = produto.preco;
+                    document.getElementById('quantidade').value = produto.quantidade;
+                    document.querySelector(`input[name="status"][value="${produto.status}"]`).checked = true;
+                })
+                .catch(error => {
+                    console.error('Erro ao consultar produtos: '+error)
+                });
+            }
+            
+            document.addEventListener('DOMContentLoaded', listarTodos);
+
+        </script>
+    </div>
+</body>
+</html>
