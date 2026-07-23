@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: meu-postgres
+    environment:
+      POSTGRES_DB: meu_banco
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 012005
+    ports:
+      - "5432:5432"
+
+  api:
+    image: meu-projeto-springboot
+    container_name: minha-api
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/meu_banco
+      DB_USERNAME: postgres
+      DB_PASSWORD: 012005
+    depends_on:
+      - postgres
