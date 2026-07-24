@@ -1,7 +1,8 @@
-# Sistema de cadastro de produtos
+# Gerenciador de Produtos
 
 ## Descrição
-O sistema de cadstro de produtos é uma aplicação web completa voltada para o gerenciamento de produtos, baseada em uma única entidade principal: produto. A aplicação permite realizar todas as operações CRUD de forma integrada entre frontend e backend. Também é possível realizar pesquisas avançadas, como por nome (ou parte dele) e por preço, sendo o preço exato e valores abaixo ou acima do informado.
+Aplicação full stack desenvolvida com Java e Spring Boot para gerenciamento de produtos, utilizando PostgreSQL para persistência de dados e publicada na plataforma Render com Docker. <br>
+Você pode visualizar o projeto <a href="https://projeto-produtos-com-springboot-3.onrender.com/">aqui</a>.
 
 ## Funcionalidades
 - Cadastrar novos produtos
@@ -15,11 +16,13 @@ O sistema de cadstro de produtos é uma aplicação web completa voltada para o 
 ## Tecnologias utilizadas
 1. Java
 2. Spring Boot
-3. SQLite
+3. PostgreSQL
 4. Spring Data JPA + Hibernate + JPQL
 5. JavaScript
 6. HTML 
 7. CSS
+8. Maven
+9. Docker
 
 ## Interface
 <p>
@@ -52,12 +55,10 @@ O sistema de cadstro de produtos é uma aplicação web completa voltada para o 
 * Ainda não foram implementadas no Front-end
 
 ## Como executar o projeto
-### Backend:
 1. Clone o repositório: `git clone https://github.com/sapicenn/projeto-produtos-com-springboot`
 2. Abra na sua IDE preferida
 3. Execute a classe `MeuProjetoSpringBootApplication.java`
-### Frontend:
-4. Abra o arquivo HTML no seu navegador ou rode com uma extensão como Live Server
+4. Acesse `http://localhost:8080` no seu navegador
 
 ## Autor
 Desenvolvido por Sarah Picenni de Oliveira
