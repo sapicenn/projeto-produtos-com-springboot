@@ -49,16 +49,10 @@ Você pode visualizar o projeto <a href="https://projeto-produtos-com-springboot
 |GET | `/buscarPorNomeComecandoCom` | busca um produto que comece com uma string fornecida
 |GET | `/buscarPorNomeTerminandoCom` | busca um produto que termine com uma string fornecida
 |GET | `/buscarPorNomeEStatus` | busca um produto e um status (disponível/indisponível)
-|GET | `/buscarPorPreco` | busca um produto de preço extato
+|GET | `/buscarPorPreco` | busca um produto de preço exato
 |GET | `/buscarPorPrecoMenorQue` | busca produtos com preço menor que o informado
 |GET | `/buscarPorPrecoMaiorQue` | busca produtos com preço maior que o informado
 * Ainda não foram implementadas no Front-end
-
-## Como executar o projeto
-1. Clone o repositório: `git clone https://github.com/sapicenn/projeto-produtos-com-springboot`
-2. Abra na sua IDE preferida
-3. Execute a classe `MeuProjetoSpringBootApplication.java`
-4. Acesse `http://localhost:8080` no seu navegador
 
 ## Autor
 Desenvolvido por Sarah Picenni de Oliveira
