@@ -1,5 +1,6 @@
 package com.produtoapi.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional; //pode retornar null, assim evita nullPointerException
 
@@ -89,30 +90,30 @@ public class ProdutoController {
 	
 	//============= BUSCAS DETALHADAS POR PREÇO DE PRODUTO =============
 	@GetMapping("/buscarPorPreco")
-	public List<Produto> buscarPorPreco(@RequestParam Double valor) {
+	public List<Produto> buscarPorPreco(@RequestParam BigDecimal valor) {
 		return produtoService.findByPreco(valor);
 	}
 	//http://localhost:8080/produtos/buscarPorPreco?valor=40
 	
 	@GetMapping("/buscarPorPrecoMaiorQue")
-	public List<Produto> buscarPorPrecoMaiorQue(@RequestParam Double valor) {
+	public List<Produto> buscarPorPrecoMaiorQue(@RequestParam BigDecimal valor) {
 		return produtoService.findByPrecoGreaterThan(valor);
 	}
 	//http://localhost:8080/produtos/buscarPorPrecoMaiorQue?valor=40
 	
 	@GetMapping("/buscarPorPrecoMenorQue")
-	public List<Produto> buscarPorPrecoMenorQue(@RequestParam Double valor) {
+	public List<Produto> buscarPorPrecoMenorQue(@RequestParam BigDecimal valor) {
 		return produtoService.findByPrecoLessThan(valor);
 	}
 	//http://localhost:8080/produtos/buscarPorPrecoMenorQue?valor=1000
 	
 	@GetMapping("/buscarTotalPreco")
-	public Double buscarTotalPreco() {
+	public BigDecimal buscarTotalPreco() {
 		return produtoService.findTotalPreco();
 	}
 	
 	@GetMapping("/buscarValorTotalDeEstoque")
-	public Double buscarValorTotalDeEstoque() {
+	public BigDecimal buscarValorTotalDeEstoque() {
 		return produtoService.findValorTotalDeEstoque();
 	}
 	
