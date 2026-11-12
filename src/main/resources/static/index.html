@@ -126,6 +126,41 @@
                 });
             }
 
+
+            function validarFormulario() {
+                document.querySelectorAll(".erro").forEach(e => e.textContent = "");
+                document.querySelectorAll(".erro-input").forEach(i => i.classList.remove("erro-input"));
+
+                const produto = getProdutoFromForm();
+                let possuiErro = false;
+
+                if (!produto.nome.trim()) {
+                    document.getElementById("erro-nome").textContent = "Informe o nome do produto.";
+                    document.getElementById("nome").classList.add("erro-input");
+                    possuiErro = true;
+                }
+
+                if (produto.preco == null || produto.preco <= 0) {
+                    document.getElementById("erro-preco").textContent = "Informe um preço válido.";
+                    document.getElementById("preco").classList.add("erro-input");
+                    possuiErro = true;
+                }
+
+                if (produto.quantidade == null || produto.quantidade < 0) {
+                    document.getElementById("erro-quantidade").textContent = "Informe uma quantidade válida.";
+                    document.getElementById("quantidade").classList.add("erro-input");
+                    possuiErro = true;
+                }
+
+                if (possuiErro) {
+                    document.querySelector(".erro-input").focus();
+                    return false;
+                }
+
+                return true;
+            }
+
+
             async function listarTodos() { //async permite usar await dentro da função
                 const response = await fetch(BASE_URL); //o fetch vai na base de dados buscar eles e vai guardar no response
                 const produtos = await response.json(); //o await espera todos os dados virem para o programa continuar. Aqui ele transforma a resposta em json
@@ -159,12 +194,13 @@
                 fora_estoque.textContent = quantidade_fora_estoque;
             } 
 
+            
             async function salvar() {
                 const produto = getProdutoFromForm();
 
-                //limpa mensagens e estilos de erro anteriores
-                document.querySelectorAll(".erro").forEach(e => e.textContent = "");
-                document.querySelectorAll(".erro-input").forEach(i => i.classList.remove("erro-input"));
+                if(!validarFormulario()) {
+                    return;
+                }
 
                 const response = await fetch(BASE_URL, {
                     method: 'POST',
@@ -179,9 +215,6 @@
 
                     const campo = erro.errors?.[0]?.field;
                     const mensagem = erro.errors?.[0]?.defaultMessage;
-
-                    console.log(campo);
-                    console.log(mensagem);
 
                     if (campo && mensagem) {
                         const input = document.getElementById(campo);
@@ -200,34 +233,41 @@
                     return;
                 }
 
-                listarTodos();
+                await listarTodos();
                 limparCampos();
             }
 
             
-                async function atualizar() {
-                    const produto = getProdutoFromForm();
-                    const id = document.getElementById('id').value;
+                
+            async function atualizar() {
+                const produto = getProdutoFromForm();
 
-                    const response = await fetch(`${BASE_URL}/${id}`, {
-                        method: 'PUT',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify(produto)
-                    });
-
-                    if (response.status === 404) {
-                        alert('Produto não encontrado!');
-                        return;
-                    }
-
-                    if (!response.ok) {
-                        alert('Erro ao atualizar produto.');
-                        return;
-                    }
-
-                    await listarTodos();
-                    limparCampos();
+                if (!validarFormulario()) {
+                    return;
                 }
+
+                const id = document.getElementById('id').value;
+
+                const response = await fetch(`${BASE_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(produto)
+                });
+
+                if (response.status === 404) {
+                    alert('Produto não encontrado!');
+                    return;
+                }
+
+                if (!response.ok) {
+                    alert('Erro ao atualizar produto.');
+                    return;
+                }
+
+                await listarTodos();
+                limparCampos();
+            }
+
             
             async function deletar() {
                 const id = document.getElementById('id').value;
