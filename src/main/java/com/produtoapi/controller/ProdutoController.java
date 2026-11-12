@@ -1,10 +1,15 @@
 package com.produtoapi.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional; //pode retornar null, assim evita nullPointerException
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.produtoapi.dto.ProdutoRequestDTO;
+import com.produtoapi.dto.ProdutoResponseDTO;
+import com.produtoapi.mapper.ProdutoMapper;
 import com.produtoapi.model.Produto;
 import com.produtoapi.service.ProdutoService;
 
@@ -22,33 +27,61 @@ public class ProdutoController {
 	}
 	
 	@GetMapping //significa que a rota é de buscar algo
-	public List<Produto> listarTodos() {
-		return produtoService.listarTodos();
+	public ResponseEntity<List<ProdutoResponseDTO>> listarTodos() {
+		List<ProdutoResponseDTO> produtos = produtoService.listarTodos()
+			.stream()
+			.map(ProdutoMapper::toResponseDTO)
+			.toList();
+
+		return ResponseEntity.ok(produtos);
 	}
 	
 	@GetMapping("/{id}")
-	public Optional<Produto> buscarPorId(@PathVariable Long id) {
-		return produtoService.findById(id);
+	public ResponseEntity<ProdutoResponseDTO> buscarPorId(@PathVariable Long id) {
+		return produtoService.findById(id)
+			.map(ProdutoMapper::toResponseDTO)
+			.map(ResponseEntity::ok)
+			.orElse(ResponseEntity.notFound().build());
 	}
 	
 	@PostMapping //significa que a rota é de salvar algo
-	public Produto salvar(@RequestBody @Valid Produto produto) { //@RequestBody quer dizer que deve vir informações de produto no corpo da solicitação
-		return produtoService.salvar(produto);
+	public ResponseEntity<ProdutoResponseDTO> salvar(@RequestBody @Valid ProdutoRequestDTO dto) {
+		Produto produto = ProdutoMapper.toEntity(dto);
+		Produto produtoSalvo = produtoService.salvar(produto);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(ProdutoMapper.toResponseDTO(produtoSalvo));
 	}
 	
 	@PostMapping("/salvarLista")
-	public List<Produto> salvarLista(@RequestBody List<Produto> produtos) {
+	public List<Produto> salvarLista(@RequestBody List<Produto> produtos) { //@RequestBody quer dizer que deve vir informações de produto no corpo da solicitação
 		return produtoService.salvarLista(produtos);
 	}
 	
 	@PutMapping("/{id}")
-	public Produto atualizar(@PathVariable Long id, @RequestBody Produto produto) { //@PathVariable quer dizer que é a informação que está na própria rota
-		return produtoService.atualizar(id, produto);
-	}
+	public ResponseEntity<ProdutoResponseDTO> atualizar (
+		@PathVariable Long id, @RequestBody @Valid ProdutoRequestDTO dto) {
+
+			if(!produtoService.existsById(id)) {
+				return ResponseEntity.notFound().build();
+			}
+
+			Produto produto = ProdutoMapper.toEntity(dto);
+			produto.setId(id);
+
+			Produto produtoAtualizado = produtoService.salvar(produto);
+
+			return ResponseEntity.ok(ProdutoMapper.toResponseDTO(produtoAtualizado));
+
+		}
 	
 	@DeleteMapping("/{id}")
-	public void deletar(@PathVariable Long id) {
+	public ResponseEntity<Void> deletar(@PathVariable Long id) {
+		if (!produtoService.existsById(id)) {
+			return ResponseEntity.notFound().build();
+		}
+
 		produtoService.deletar(id);
+		return ResponseEntity.noContent().build();
 	}
 	
 	@GetMapping("/totalProdutos")
@@ -89,30 +122,30 @@ public class ProdutoController {
 	
 	//============= BUSCAS DETALHADAS POR PREÇO DE PRODUTO =============
 	@GetMapping("/buscarPorPreco")
-	public List<Produto> buscarPorPreco(@RequestParam Double valor) {
+	public List<Produto> buscarPorPreco(@RequestParam BigDecimal valor) {
 		return produtoService.findByPreco(valor);
 	}
 	//http://localhost:8080/produtos/buscarPorPreco?valor=40
 	
 	@GetMapping("/buscarPorPrecoMaiorQue")
-	public List<Produto> buscarPorPrecoMaiorQue(@RequestParam Double valor) {
+	public List<Produto> buscarPorPrecoMaiorQue(@RequestParam BigDecimal valor) {
 		return produtoService.findByPrecoGreaterThan(valor);
 	}
 	//http://localhost:8080/produtos/buscarPorPrecoMaiorQue?valor=40
 	
 	@GetMapping("/buscarPorPrecoMenorQue")
-	public List<Produto> buscarPorPrecoMenorQue(@RequestParam Double valor) {
+	public List<Produto> buscarPorPrecoMenorQue(@RequestParam BigDecimal valor) {
 		return produtoService.findByPrecoLessThan(valor);
 	}
 	//http://localhost:8080/produtos/buscarPorPrecoMenorQue?valor=1000
 	
 	@GetMapping("/buscarTotalPreco")
-	public Double buscarTotalPreco() {
+	public BigDecimal buscarTotalPreco() {
 		return produtoService.findTotalPreco();
 	}
 	
 	@GetMapping("/buscarValorTotalDeEstoque")
-	public Double buscarValorTotalDeEstoque() {
+	public BigDecimal buscarValorTotalDeEstoque() {
 		return produtoService.findValorTotalDeEstoque();
 	}
 	

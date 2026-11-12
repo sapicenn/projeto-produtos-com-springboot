@@ -3,6 +3,8 @@ package com.produtoapi.service;
 import java.util.List;
 import java.util.Optional; //pode retornar null, assim evita nullPointerException
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.produtoapi.repository.ProdutoRepository;
@@ -13,6 +15,10 @@ public class ProdutoService {
 	
 	@Autowired //isso quer dizer que o spring vai gerenciar o ciclo de vida dessa variável
 	private ProdutoRepository produtoRepository;
+
+	public boolean existsById(Long id) {
+    	return produtoRepository.existsById(id);
+	}
 	
 	public List<Produto> listarTodos() {
 		return produtoRepository.findAll();
@@ -31,7 +37,7 @@ public class ProdutoService {
 		produtoRepository.deleteById(id);
 	}
 	
-	public Produto atualizar(Long id, Produto produto) {
+	public Produto atualizar(Long id, Produto produto) {	
 		if(produtoRepository.existsById(id)) {
 			produto.setId(id);
 			return produtoRepository.save(produto);
@@ -72,23 +78,23 @@ public class ProdutoService {
 	
 	//============= BUSCAS DETALHADAS POR PREÇO DE PRODUTO =============
 	
-	public List<Produto> findByPreco(Double preco) {
+	public List<Produto> findByPreco(BigDecimal preco) {
 		return produtoRepository.findByPreco(preco);
 	}
 	
-	public List<Produto> findByPrecoGreaterThan(Double preco) {
+	public List<Produto> findByPrecoGreaterThan(BigDecimal preco) {
 		return produtoRepository.findByPrecoGreaterThan(preco);
 	}
 	
-	public List<Produto> findByPrecoLessThan(Double preco) {
+	public List<Produto> findByPrecoLessThan(BigDecimal preco) {
 		return produtoRepository.findByPrecoLessThan(preco);
 	}
 	
-	public Double findTotalPreco() {
+	public BigDecimal findTotalPreco() {
 		return produtoRepository.findTotalPreco();
 	}
 	
-	public Double findValorTotalDeEstoque() {
+	public BigDecimal findValorTotalDeEstoque() {
 		return produtoRepository.findValorTotalDeEstoque();
 	}
 	
