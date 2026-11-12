@@ -15,6 +15,10 @@ public class ProdutoService {
 	
 	@Autowired //isso quer dizer que o spring vai gerenciar o ciclo de vida dessa variável
 	private ProdutoRepository produtoRepository;
+
+	public boolean existsById(Long id) {
+    	return produtoRepository.existsById(id);
+	}
 	
 	public List<Produto> listarTodos() {
 		return produtoRepository.findAll();

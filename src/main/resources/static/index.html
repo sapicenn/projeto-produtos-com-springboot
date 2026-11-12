@@ -204,40 +204,80 @@
                 limparCampos();
             }
 
-            async function atualizar() {
-                const produto = getProdutoFromForm();
-                const id = document.getElementById('id').value;
-                await fetch(`${BASE_URL}/${id}`, {
-                    method: 'PUT',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(produto)
-                });
-                listarTodos();
-                limparCampos();
-            }
+            
+                async function atualizar() {
+                    const produto = getProdutoFromForm();
+                    const id = document.getElementById('id').value;
+
+                    const response = await fetch(`${BASE_URL}/${id}`, {
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(produto)
+                    });
+
+                    if (response.status === 404) {
+                        alert('Produto não encontrado!');
+                        return;
+                    }
+
+                    if (!response.ok) {
+                        alert('Erro ao atualizar produto.');
+                        return;
+                    }
+
+                    await listarTodos();
+                    limparCampos();
+                }
             
             async function deletar() {
                 const id = document.getElementById('id').value;
-                await fetch(`${BASE_URL}/${id}`, {method: 'DELETE'});
-                
-                listarTodos();
+
+                const response = await fetch(`${BASE_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.status === 404) {
+                    alert('Produto não encontrado!');
+                    return;
+                }
+
+                if (!response.ok) {
+                    alert('Erro ao excluir produto.');
+                    return;
+                }
+
+                await listarTodos();
                 limparCampos();
-            }
+            }            
             
-            function carregarCampos() {
+            async function carregarCampos() {
                 const id = document.getElementById('id').value;
-                fetch(`${BASE_URL}/${id}`).then(response => response.json()).then(produto => {
+
+                try {
+                    const response = await fetch(`${BASE_URL}/${id}`);
+
+                    if (response.status === 404) {
+                        alert('Produto não encontrado!');
+                        return;
+                    }
+
+                    if (!response.ok) {
+                        throw new Error('Erro ao consultar produto.');
+                    }
+
+                    const produto = await response.json();
+
                     document.getElementById('nome').value = produto.nome;
                     document.getElementById('preco').value = produto.preco;
                     document.getElementById('quantidade').value = produto.quantidade;
                     document.querySelector(`input[name="status"][value="${produto.status}"]`).checked = true;
-                })
-                .catch(error => {
-                    console.error('Erro ao consultar produtos: '+error)
-                });
+
+                } catch (error) {
+                    console.error('Erro ao consultar produtos: ' + error);
+                    alert('Não foi possível consultar o produto.');
+                }
             }
-            
-            document.addEventListener('DOMContentLoaded', listarTodos);
+
 
         </script>
     </div>
