@@ -22,19 +22,16 @@
                 <div class="linha">
                     <label for="nome">Nome</label>
                     <input type="text" id="nome" placeholder="Nome do produto" class="input-line">
-                    <small id="erro-nome" class="erro"></small>
                 </div>
 
                 <div class="linha">
                     <label for="preco">Preço</label>
                     <input type="text" id="preco" placeholder="Preço do produto" class="input-line">		
-                    <small id="erro-preco" class="erro"></small>
                 </div>
                 
                 <div class="linha">
                     <label for="quantidade">Quantidade</label>
                     <input type="text" id="quantidade" placeholder="Quantidade em estoque" class="input-line">
-                    <small id="erro-quantidade" class="erro"></small>
                 </div>
                 
                 <div class="linha input-radio">
@@ -135,19 +132,19 @@
                 let possuiErro = false;
 
                 if (!produto.nome.trim()) {
-                    document.getElementById("erro-nome").textContent = "Informe o nome do produto.";
+                    alert("Informe o nome do produto.");
                     document.getElementById("nome").classList.add("erro-input");
                     possuiErro = true;
                 }
 
                 if (produto.preco == null || produto.preco <= 0) {
-                    document.getElementById("erro-preco").textContent = "Informe um preço válido.";
+                    alert("Informe um preço válido.");
                     document.getElementById("preco").classList.add("erro-input");
                     possuiErro = true;
                 }
 
                 if (produto.quantidade == null || produto.quantidade < 0) {
-                    document.getElementById("erro-quantidade").textContent = "Informe uma quantidade válida.";
+                    alert("Informe uma quantidade válida.");
                     document.getElementById("quantidade").classList.add("erro-input");
                     possuiErro = true;
                 }
@@ -217,12 +214,8 @@
                     const mensagem = erro.errors?.[0]?.defaultMessage;
 
                     if (campo && mensagem) {
-                        const input = document.getElementById(campo);
-                        const erroCampo = document.getElementById(`erro-${campo}`);
 
-                        if (erroCampo) {
-                            erroCampo.textContent = mensagem;
-                        }
+                        const input = document.getElementById(campo);
 
                         if (input) {
                             input.classList.add("erro-input");
@@ -236,17 +229,21 @@
                 await listarTodos();
                 limparCampos();
             }
-
-            
                 
             async function atualizar() {
                 const produto = getProdutoFromForm();
 
-                if (!validarFormulario()) {
+                const id = document.getElementById('id').value.trim();
+
+                if (!id) {
+                    alert('Informe o ID do produto que deseja atualizar.');
+                    document.getElementById('id').focus();
                     return;
                 }
 
-                const id = document.getElementById('id').value;
+                if (!validarFormulario()) {
+                    return;
+                }
 
                 const response = await fetch(`${BASE_URL}/${id}`, {
                     method: 'PUT',
@@ -292,6 +289,12 @@
             
             async function carregarCampos() {
                 const id = document.getElementById('id').value;
+
+                if (!id.trim()) {
+                    alert('Informe o ID do produto que deseja consultar.');
+                    document.getElementById('id').focus();
+                    return;
+                }
 
                 try {
                     const response = await fetch(`${BASE_URL}/${id}`);
