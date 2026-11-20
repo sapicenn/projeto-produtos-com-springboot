@@ -22,19 +22,16 @@
                 <div class="linha">
                     <label for="nome">Nome</label>
                     <input type="text" id="nome" placeholder="Nome do produto" class="input-line">
-                    <small id="erro-nome" class="erro"></small>
                 </div>
 
                 <div class="linha">
                     <label for="preco">Preço</label>
                     <input type="text" id="preco" placeholder="Preço do produto" class="input-line">		
-                    <small id="erro-preco" class="erro"></small>
                 </div>
                 
                 <div class="linha">
                     <label for="quantidade">Quantidade</label>
                     <input type="text" id="quantidade" placeholder="Quantidade em estoque" class="input-line">
-                    <small id="erro-quantidade" class="erro"></small>
                 </div>
                 
                 <div class="linha input-radio">
@@ -126,6 +123,41 @@
                 });
             }
 
+
+            function validarFormulario() {
+                document.querySelectorAll(".erro").forEach(e => e.textContent = "");
+                document.querySelectorAll(".erro-input").forEach(i => i.classList.remove("erro-input"));
+
+                const produto = getProdutoFromForm();
+                let possuiErro = false;
+
+                if (!produto.nome.trim()) {
+                    alert("Informe o nome do produto.");
+                    document.getElementById("nome").classList.add("erro-input");
+                    possuiErro = true;
+                }
+
+                if (isNaN(produto.preco) || produto.preco <= 0) {
+                    alert("Informe um preço válido.");
+                    document.getElementById("preco").classList.add("erro-input");
+                    possuiErro = true;
+                }
+
+                if (isNaN(produto.quantidade) || produto.quantidade < 0) {
+                    alert("Informe uma quantidade válida.");
+                    document.getElementById("quantidade").classList.add("erro-input");
+                    possuiErro = true;
+                }
+
+                if (possuiErro) {
+                    document.querySelector(".erro-input").focus();
+                    return false;
+                }
+
+                return true;
+            }
+
+
             async function listarTodos() { //async permite usar await dentro da função
                 const response = await fetch(BASE_URL); //o fetch vai na base de dados buscar eles e vai guardar no response
                 const produtos = await response.json(); //o await espera todos os dados virem para o programa continuar. Aqui ele transforma a resposta em json
@@ -159,12 +191,13 @@
                 fora_estoque.textContent = quantidade_fora_estoque;
             } 
 
+            
             async function salvar() {
                 const produto = getProdutoFromForm();
 
-                //limpa mensagens e estilos de erro anteriores
-                document.querySelectorAll(".erro").forEach(e => e.textContent = "");
-                document.querySelectorAll(".erro-input").forEach(i => i.classList.remove("erro-input"));
+                if(!validarFormulario()) {
+                    return;
+                }
 
                 const response = await fetch(BASE_URL, {
                     method: 'POST',
@@ -177,19 +210,16 @@
                 if (!response.ok) {
                     const erro = await response.json();
 
-                    const campo = erro.errors?.[0]?.field;
-                    const mensagem = erro.errors?.[0]?.defaultMessage;
+                    if (erro.errors?.length) {
 
-                    console.log(campo);
-                    console.log(mensagem);
+                        const mensagens = erro.errors
+                            .map(item => item.defaultMessage)
+                            .join('\n');
 
-                    if (campo && mensagem) {
+                        alert(mensagens);
+
+                        const campo = erro.errors[0].field;
                         const input = document.getElementById(campo);
-                        const erroCampo = document.getElementById(`erro-${campo}`);
-
-                        if (erroCampo) {
-                            erroCampo.textContent = mensagem;
-                        }
 
                         if (input) {
                             input.classList.add("erro-input");
@@ -200,44 +230,118 @@
                     return;
                 }
 
-                listarTodos();
+                await listarTodos();
                 limparCampos();
             }
-
+                
             async function atualizar() {
                 const produto = getProdutoFromForm();
-                const id = document.getElementById('id').value;
-                await fetch(`${BASE_URL}/${id}`, {
+
+                const id = document.getElementById('id').value.trim();
+
+                if (!id) {
+                    alert('Informe o ID do produto que deseja atualizar.');
+                    document.getElementById('id').focus();
+                    return;
+                }
+
+                if (!validarFormulario()) {
+                    return;
+                }
+
+                const response = await fetch(`${BASE_URL}/${id}`, {
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(produto)
                 });
-                listarTodos();
+
+                if (response.status === 404) {
+                    alert('Produto não encontrado!');
+                    return;
+                }
+
+                if (!response.ok) {
+                    const erro = await response.json();
+
+                    if (erro.errors?.length) {
+                        const mensagens = erro.errors
+                            .map(item => item.defaultMessage)
+                            .join('\n');
+
+                        alert(mensagens);
+
+                        const campo = erro.errors[0].field;
+                        const input = document.getElementById(campo);
+
+                        if (input) {
+                            input.classList.add("erro-input");
+                            input.focus();
+                        }
+                    }
+
+                    return;
+                }
+
+                await listarTodos();
                 limparCampos();
             }
+
             
             async function deletar() {
                 const id = document.getElementById('id').value;
-                await fetch(`${BASE_URL}/${id}`, {method: 'DELETE'});
-                
-                listarTodos();
+
+                const response = await fetch(`${BASE_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.status === 404) {
+                    alert('Produto não encontrado!');
+                    return;
+                }
+
+                if (!response.ok) {
+                    alert('Erro ao excluir produto.');
+                    return;
+                }
+
+                await listarTodos();
                 limparCampos();
-            }
+            }            
             
-            function carregarCampos() {
+            async function carregarCampos() {
                 const id = document.getElementById('id').value;
-                fetch(`${BASE_URL}/${id}`).then(response => response.json()).then(produto => {
+
+                if (!id.trim()) {
+                    alert('Informe o ID do produto que deseja consultar.');
+                    document.getElementById('id').focus();
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${BASE_URL}/${id}`);
+
+                    if (response.status === 404) {
+                        alert('Produto não encontrado!');
+                        return;
+                    }
+
+                    if (!response.ok) {
+                        throw new Error('Erro ao consultar produto.');
+                    }
+
+                    const produto = await response.json();
+
                     document.getElementById('nome').value = produto.nome;
                     document.getElementById('preco').value = produto.preco;
                     document.getElementById('quantidade').value = produto.quantidade;
                     document.querySelector(`input[name="status"][value="${produto.status}"]`).checked = true;
-                })
-                .catch(error => {
-                    console.error('Erro ao consultar produtos: '+error)
-                });
+
+                } catch (error) {
+                    console.error('Erro ao consultar produtos: ' + error);
+                    alert('Não foi possível consultar o produto.');
+                }
             }
-            
-            document.addEventListener('DOMContentLoaded', listarTodos);
+
 
         </script>
     </div>

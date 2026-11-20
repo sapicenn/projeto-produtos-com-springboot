@@ -1,5 +1,7 @@
 package com.produtoapi.model;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,10 +23,10 @@ public class Produto {
 	private Integer quantidade;
 	@NotNull(message = "Informe um preço")
 	@Positive(message = "O valor deve ser maior que zero")
-	private Double preco;
+	private BigDecimal preco;
 	private String status;
 	
-	public Produto(String nome, Integer quantidade, Double preco, String status) {
+	public Produto(String nome, Integer quantidade, BigDecimal preco, String status) {
 		this.nome = nome;
 		this.quantidade = quantidade;
 		this.preco = preco;
@@ -57,11 +59,11 @@ public class Produto {
 		this.quantidade = qtde;
 	}
 	
-	public Double getPreco() {
+	public BigDecimal getPreco() {
 		return this.preco;
 	}
 	
-	public void setPreco(Double preco) {
+	public void setPreco(BigDecimal preco) {
 		this.preco = preco;
 	}
 	
