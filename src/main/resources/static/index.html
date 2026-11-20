@@ -137,13 +137,13 @@
                     possuiErro = true;
                 }
 
-                if (produto.preco == null || produto.preco <= 0) {
+                if (isNaN(produto.preco) || produto.preco <= 0) {
                     alert("Informe um preço válido.");
                     document.getElementById("preco").classList.add("erro-input");
                     possuiErro = true;
                 }
 
-                if (produto.quantidade == null || produto.quantidade < 0) {
+                if (isNaN(produto.quantidade) || produto.quantidade < 0) {
                     alert("Informe uma quantidade válida.");
                     document.getElementById("quantidade").classList.add("erro-input");
                     possuiErro = true;
@@ -210,11 +210,15 @@
                 if (!response.ok) {
                     const erro = await response.json();
 
-                    const campo = erro.errors?.[0]?.field;
-                    const mensagem = erro.errors?.[0]?.defaultMessage;
+                    if (erro.errors?.length) {
 
-                    if (campo && mensagem) {
+                        const mensagens = erro.errors
+                            .map(item => item.defaultMessage)
+                            .join('\n');
 
+                        alert(mensagens);
+
+                        const campo = erro.errors[0].field;
                         const input = document.getElementById(campo);
 
                         if (input) {
@@ -257,7 +261,24 @@
                 }
 
                 if (!response.ok) {
-                    alert('Erro ao atualizar produto.');
+                    const erro = await response.json();
+
+                    if (erro.errors?.length) {
+                        const mensagens = erro.errors
+                            .map(item => item.defaultMessage)
+                            .join('\n');
+
+                        alert(mensagens);
+
+                        const campo = erro.errors[0].field;
+                        const input = document.getElementById(campo);
+
+                        if (input) {
+                            input.classList.add("erro-input");
+                            input.focus();
+                        }
+                    }
+
                     return;
                 }
 
