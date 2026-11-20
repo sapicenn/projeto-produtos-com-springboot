@@ -2,7 +2,7 @@
 
 ## Descrição
 Aplicação full stack desenvolvida com Java e Spring Boot para gerenciamento de produtos, utilizando PostgreSQL para persistência de dados e publicada na plataforma Render com Docker. <br>
-Você pode visualizar o projeto <a href="https://projeto-produtos-com-springboot-3.onrender.com/">aqui</a>.
+Você pode visualizar o projeto <a href="https://projeto-produtos-com-springboot-3.onrender.com/">aqui</a> (o render pode levar até 2 minutos para iniciar a aplicação).
 
 ## Funcionalidades
 - Cadastrar novos produtos
