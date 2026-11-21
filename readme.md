@@ -24,9 +24,9 @@ Você pode visualizar o projeto <a href="https://projeto-produtos-com-springboot
 8. Maven
 9. Docker
 
-## Interface
+## Demonstração de uso
 <p>
-    <img src="imgs/interface.png">
+    <img src="assets/gif.gif">
 </p>
 
 
